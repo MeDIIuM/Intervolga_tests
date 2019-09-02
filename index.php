@@ -2,26 +2,31 @@
 const Lim = 10;
 if(isset($_GET['page']))
 {
-    $num_page=$_GET['page'];
+    htmlspecialchars($num_page=$_GET['page']);
 }
 else{
     $num_page=1;
 }
-if(isset($_GET['sort']))
-{
-    $sort=$_GET['sort'];
+if(isset($_GET['sort'])) {
+    htmlspecialchars($sort=$_GET['sort']);
 }
-if(isset($_GET['direction']))
-{
-    $direction=$_GET['direction'];
+else{
+    $sort="id_country";
+}
+if(isset($_GET['direction'])) {
+    htmlspecialchars($direction=$_GET['direction']);
+}
+else{
+    $direction="ASC";
 }
 
 include "config.php";
 $dbh = new PDO('mysql:host='.$mysql_host.";charset=utf8", $username, $password);
 $dbh->exec("use $dbname");
-$add="INSERT INTO 'country' 
+//insert into country(id_country,name_country) values (1,'Россия');
+$add="INSERT INTO country 
 (
-`name_country`,
+name_country
 )
 VALUES (
 ?
@@ -45,9 +50,22 @@ if (array_key_exists('country_add', $_POST)) {
     <title>Title</title>
 </head>
 <body>
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalCenter_1">
-                        Добавление
-                    </button>
+<nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary" >
+    <a class="navbar-brand" href="http://intervolga.dev/">Главная</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalCenter_1">
+                    Добавление
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
     <div id="Table" class="container">
         <table class="table table-striped table-bordered"">
             <thead>
@@ -56,16 +74,15 @@ if (array_key_exists('country_add', $_POST)) {
                     <th scope="col"><a href="<?php echo generateSortUrl("name_country", $_GET, $num_page);?>">Страна</a></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-striped">
             <?php
             error_reporting(-1);
             ini_set('display_errors', 'On');
-            $q="SELECT * FROM country ";
+            htmlspecialchars($q="SELECT * FROM country ");
             if (isset($_GET['sort'])) {
-                $q = $q . " ORDER BY " . $_GET['sort'] . " " . $_GET['direction'] . " ";
+                htmlspecialchars($q = $q . " ORDER BY " . $_GET['sort'] . " " . $_GET['direction'] . " ");
             }
-            $q = $q. " LIMIT ". Lim . " " . "OFFSET ".  ($num_page - 1)* Lim;
-
+            htmlspecialchars($q = $q. " LIMIT ". Lim . " " . "OFFSET ".  ($num_page - 1)* Lim);
             $result = $dbh->query($q);
             foreach($result as $row) {
                 ?>
@@ -113,7 +130,7 @@ if (array_key_exists('country_add', $_POST)) {
                         <form class="Add" method="post">
                         <div id="country_add" class="container">
                             <div class="form-group row">
-                                <label for="input_name" class="col-sm-2 col-form-label">Логин</label>
+                                <label for="input_name" class="col-sm-2 col-form-label">Страна:</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="name_country">
                                 </div>
@@ -135,17 +152,17 @@ function generateSortUrl($sort, $get,$num_page){
  else {
      $direction = "ASC";
  }
-$res="http://intervolga.dev/?"."sort=".$sort."&"."direction=".$direction."&"."page=".$num_page;
+htmlspecialchars($res="http://intervolga.dev/?"."sort=".$sort."&"."direction=".$direction."&"."page=".$num_page);
 return $res;
 }
 
 function generatePageUrl($page, $num_page, $sort, $direction){
         if ($page == "next") {
             $num_page++;
-            $res = "http://intervolga.dev/?"."sort=".$sort."&"."direction=".$direction."&"."page=".$num_page;
+            htmlspecialchars($res = "http://intervolga.dev/?"."sort=".$sort."&"."direction=".$direction."&"."page=".$num_page);
         } elseif ($page == "prev") {
             $num_page--;
-            $res = "http://intervolga.dev/?"."sort=".$sort."&"."direction=".$direction."&"."page=".$num_page;
+            htmlspecialchars($res = "http://intervolga.dev/?"."sort=".$sort."&"."direction=".$direction."&"."page=".$num_page);
         }
         return $res;
 }
