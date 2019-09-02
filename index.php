@@ -52,8 +52,8 @@ if (array_key_exists('country_add', $_POST)) {
         <table class="table table-striped table-bordered"">
             <thead>
                 <tr class="table-primary">
-                    <th scope="col"><a href="<?php echo generateSortUrl("id_country");?>">№</a></th>
-                    <th scope="col"><a href="<?php echo generateSortUrl("name_country");?>">Страна</a></th>
+                    <th scope="col"><a href="<?php echo generateSortUrl("id_country", $_GET, $num_page);?>">№</a></th>
+                    <th scope="col"><a href="<?php echo generateSortUrl("name_country", $_GET, $num_page);?>">Страна</a></th>
                 </tr>
             </thead>
             <tbody>
@@ -127,7 +127,7 @@ if (array_key_exists('country_add', $_POST)) {
 </body>
 </html>
 <?php
-function generateSortUrl($sort, $get){
+function generateSortUrl($sort, $get,$num_page){
     $get=$_GET;
     $direction = $_GET['direction'];
  if ($direction == "ASC") {
@@ -135,7 +135,7 @@ function generateSortUrl($sort, $get){
  else {
      $direction = "ASC";
  }
-$res="http://intervolga.dev/?"."sort=".$sort."&"."direction=".$direction;
+$res="http://intervolga.dev/?"."sort=".$sort."&"."direction=".$direction."&"."page=".$num_page;
 return $res;
 }
 
